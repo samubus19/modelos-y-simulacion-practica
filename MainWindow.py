@@ -125,6 +125,7 @@ class Window:
         self.root.tk.mainloop()
 
     def llenarTablaSimulacion(self):
+        self.tablaSimulacion.delete(*self.tablaSimulacion.get_children())
         sistema    = Sistema(
             int(self.entryCola.get()), 
             int(self.entryPS.get()), 
