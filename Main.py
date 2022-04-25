@@ -7,42 +7,46 @@ class Sistema():
     #* Inicializacion de variables
     def __init__(self) -> None:
         self.cola                      = 0 #La cola siempre inicia en 0
-        self.ps                        = 1
+        self.ps                        = int(input("Ingrese Valor de PS inicial:"))
         self.data                      = []
-        self.hora_actual               = datetime.datetime(year   =datetime.date.today().year, 
-                                                           month  =datetime.date.today().month, 
-                                                           day    =datetime.date.today().day, 
-                                                           hour   =9, 
-                                                           minute =0, 
-                                                           second =32)
+        hora_actual_input              = (input("Ingrese hora actual inicial (h:m:s):")).split(sep=":") #9:0:32
+        hora_llegada_cliente_input     = (input("Ingrese hora llegda cliente inicial (h:m:s):")).split(sep=":") #9:0:49
+        hora_fin_serivicio_input       = (input("Ingrese hora fin servicio inicial (h:m:s):")).split(sep=":") #9:01:07
         
-        self.hora_llegada_cliente      = datetime.datetime(year   =datetime.date.today().year, 
-                                                           month  =datetime.date.today().month, 
-                                                           day    =datetime.date.today().day, 
-                                                           hour   =9, 
-                                                           minute =0, 
-                                                           second =49)
+        self.hora_actual               = datetime.datetime(year   = datetime.date.today().year, 
+                                                           month  = datetime.date.today().month, 
+                                                           day    = datetime.date.today().day, 
+                                                           hour   = int(hora_actual_input[0]), 
+                                                           minute = int(hora_actual_input[1]), 
+                                                           second = int(hora_actual_input[2]))
+         
+        self.hora_llegada_cliente      = datetime.datetime(year   = datetime.date.today().year, 
+                                                           month  = datetime.date.today().month, 
+                                                           day    = datetime.date.today().day, 
+                                                           hour   = int(hora_llegada_cliente_input[0]), 
+                                                           minute = int(hora_llegada_cliente_input[1]), 
+                                                           second = int(hora_llegada_cliente_input[2]))
+         
+        self.hora_fin_servicio         = datetime.datetime(year   = datetime.date.today().year, 
+                                                           month  = datetime.date.today().month, 
+                                                           day    = datetime.date.today().day, 
+                                                           hour   = int(hora_fin_serivicio_input[0]), 
+                                                           minute = int(hora_fin_serivicio_input[1]), 
+                                                           second = int(hora_fin_serivicio_input[2]))
+         
+        self.hora_abandono_de_cola     = datetime.datetime(year   = datetime.date.today().year, 
+                                                           month  = datetime.date.today().month, 
+                                                           day    = datetime.date.today().day, 
+                                                           hour   = 23, 
+                                                           minute = 3, 
+                                                           second = 0)
         
-        self.hora_fin_servicio         = datetime.datetime(year   =datetime.date.today().year, 
-                                                           month  =datetime.date.today().month, 
-                                                           day    =datetime.date.today().day, 
-                                                           hour   =9, 
-                                                           minute =1, 
-                                                           second =7)
+        self.tiempo_abandono_cliente   = datetime.timedelta(minutes=random.randint(int(input("Ingrese rango minimo de tiempo de abandono de cliente (minutos):")), int(input("Ingrese rango maximo de tiempo de abandono de cliente (minutos):"))))
         
-        self.hora_abandono_de_cola     = datetime.datetime(year   =datetime.date.today().year, 
-                                                           month  =datetime.date.today().month, 
-                                                           day    =datetime.date.today().day, 
-                                                           hour   =23, 
-                                                           minute =3, 
-                                                           second =0)
-        
-        self.tiempo_abandono_cliente   = datetime.timedelta(minutes=2)
-        
-        self.tiempo_de_llegada_minimo  = 10 #tiempo en segundos
-        self.tiempo_de_llegada_maximo  = 10 #tiempo en segundos
-        self.tiempo_de_servicio_minimo = 50 #tiempo en segundos
-        self.tiempo_de_servicio_maximo = 50 #tiempo en segundos
+        self.tiempo_de_llegada_minimo  = int(input("Ingrese valor minimo de tiempo de llegada del cliente (segundos):"))#10 #tiempo en segundos
+        self.tiempo_de_llegada_maximo  = int(input("Ingrese valor maximo de tiempo de llegada del cliente (segundos):"))#10 #tiempo en segundos
+        self.tiempo_de_servicio_minimo = int(input("Ingrese valor minimo de duracion del servicio (segundos):"))#50 #tiempo en segundos
+        self.tiempo_de_servicio_maximo = int(input("Ingrese valor maximo de duracion del servicio (segundos):"))#50 #tiempo en segundos
         
         self.horas_abandono            = []
         
@@ -79,7 +83,8 @@ class Sistema():
             self.cola                 -= 1
             self.hora_fin_servicio     = self.hora_actual + self.duracion_servicio
             self.horas_abandono.remove(self.horas_abandono[0])
-            self.hora_abandono_de_cola = self.horas_abandono[0]
+            if(len(self.horas_abandono) > 0):
+                self.hora_abandono_de_cola = self.horas_abandono[0]
         else:
             self.hora_fin_servicio    += datetime.timedelta(hours=5)
             self.aux_hora_fin_servicio = True
