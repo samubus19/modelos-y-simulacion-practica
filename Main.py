@@ -5,43 +5,53 @@ class Tabla():
     
     #* Inicializacion de variables
     def __init__(self) -> None:
-        self.cola_a                  = 0
-        self.cola_b                  = 0
-        self.ps                      = 0
-        self.hora_actual             = datetime.datetime(year = datetime.datetime.now().year, 
-                                                       month  = datetime.datetime.now().month, 
-                                                       day    = datetime.datetime.now().day, 
-                                                       hour   = 8, 
-                                                       minute = 0, 
-                                                       second = 0)
-         
-        self.hora_llegada_cliente_a  = datetime.datetime(year = datetime.datetime.now().year, 
-                                                       month  = datetime.datetime.now().month, 
-                                                       day    = datetime.datetime.now().day, 
-                                                       hour   = 8, 
-                                                       minute = 7, 
-                                                       second = 0)
-         
-        self.hora_llegada_cliente_b  = datetime.datetime(year = datetime.datetime.now().year, 
-                                                       month  = datetime.datetime.now().month, 
-                                                       day    = datetime.datetime.now().day, 
-                                                       hour   = 8, 
-                                                       minute = 7, 
-                                                       second = 0)
-         
-        self.hora_fin_servicio       = datetime.datetime(year = datetime.datetime.now().year, 
-                                                       month  = datetime.datetime.now().month, 
-                                                       day    = datetime.datetime.now().day,
-                                                       hour   = 8, 
-                                                       minute = 8,
-                                                       second = 0)
-        
-        self.duracion_servicio       = datetime.timedelta(minutes=2)
-        self.intervalo_por_cliente_a = datetime.timedelta(minutes=7)
-        self.intervalo_por_cliente_b = datetime.timedelta(minutes=3)
+        self.cola_a                  = int(input("Ingrese Valor de Qa inicial:"))
+        self.cola_b                  = int(input("Ingrese Valor de Qb inicial:"))
+        self.ps                      = int(input("Ingrese Valor de PS inicial:"))
         self.data                    = []
+        hora_actual_input            = (input("Ingrese hora actual inicial (h:m:s):")).split(sep=":") #9:0:32
+        hora_llegada_cliente_a_input = (input("Ingrese hora llegda cliente A inicial (h:m:s):")).split(sep=":") #9:0:49
+        hora_llegada_cliente_b_input = (input("Ingrese hora llegda cliente B inicial (h:m:s):")).split(sep=":") #9:0:49
+        hora_fin_serivicio_input     = (input("Ingrese hora fin servicio inicial (h:m:s):")).split(sep=":") #9:01:07
+        
+        self.hora_actual               = datetime.datetime(year   = datetime.date.today().year, 
+                                                           month  = datetime.date.today().month, 
+                                                           day    = datetime.date.today().day, 
+                                                           hour   = int(hora_actual_input[0]), 
+                                                           minute = int(hora_actual_input[1]), 
+                                                           second = int(hora_actual_input[2]))
+         
+        self.hora_llegada_cliente_a      = datetime.datetime(year   = datetime.date.today().year, 
+                                                           month  = datetime.date.today().month, 
+                                                           day    = datetime.date.today().day, 
+                                                           hour   = int(hora_llegada_cliente_a_input[0]), 
+                                                           minute = int(hora_llegada_cliente_a_input[1]), 
+                                                           second = int(hora_llegada_cliente_a_input[2]))
+        
+        self.hora_llegada_cliente_b      = datetime.datetime(year   = datetime.date.today().year, 
+                                                           month  = datetime.date.today().month, 
+                                                           day    = datetime.date.today().day, 
+                                                           hour   = int(hora_llegada_cliente_b_input[0]), 
+                                                           minute = int(hora_llegada_cliente_b_input[1]), 
+                                                           second = int(hora_llegada_cliente_b_input[2]))
+         
+        self.hora_fin_servicio         = datetime.datetime(year   = datetime.date.today().year, 
+                                                           month  = datetime.date.today().month, 
+                                                           day    = datetime.date.today().day, 
+                                                           hour   = int(hora_fin_serivicio_input[0]), 
+                                                           minute = int(hora_fin_serivicio_input[1]), 
+                                                           second = int(hora_fin_serivicio_input[2]))
+        
+        self.tiempo_de_llegada_cliente_a_minimo  = int(input("Ingrese valor minimo de tiempo de llegada del cliente A(minutos):"))#10 #tiempo en segundos
+        self.tiempo_de_llegada_cliente_a_maximo  = int(input("Ingrese valor maximo de tiempo de llegada del cliente A(minutos):"))#10 #tiempo en segundos
+        self.tiempo_de_llegada_cliente_b_minimo  = int(input("Ingrese valor minimo de tiempo de llegada del cliente B(minutos):"))#10 #tiempo en segundos
+        self.tiempo_de_llegada_cliente_b_maximo  = int(input("Ingrese valor maximo de tiempo de llegada del cliente B(minutos):"))#10 #tiempo en segundos
+        self.tiempo_de_servicio_minimo           = int(input("Ingrese valor minimo de duracion del servicio (segundos):"))#50 #tiempo en segundos
+        self.tiempo_de_servicio_maximo           = int(input("Ingrese valor maximo de duracion del servicio (segundos):"))#50 #tiempo en segundos
+        
+        self.data                                = []
         #Variables Auxiliares
-        self.flag_fin_servicio       = False
+        self.flag_fin_servicio                   = False
 
         
     #* Metodo para simular evento de la entrada de un cliente al sistema
@@ -89,6 +99,10 @@ class Tabla():
     #* Metodo para elegir el evento que se va a simular
     def elegirEvento(self):
         for i in range(0,20):
+            
+            self.duracion_servicio       = datetime.timedelta(seconds=random.randint(self.tiempo_de_servicio_minimo,self.tiempo_de_servicio_maximo))
+            self.intervalo_por_cliente_a = datetime.timedelta(minutes=random.randint(self.tiempo_de_llegada_cliente_a_minimo, self.tiempo_de_llegada_cliente_a_maximo))
+            self.intervalo_por_cliente_b = datetime.timedelta(minutes=random.randint(self.tiempo_de_llegada_cliente_b_minimo, self.tiempo_de_llegada_cliente_b_maximo))
             
             hora_fin_servicio_aux = ('--------' if self.flag_fin_servicio else self.hora_fin_servicio.time())
             
